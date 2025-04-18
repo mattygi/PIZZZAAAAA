@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register Account</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="{{ url_for('static', filename='js/register.js') }}" defer></script> <!-- ✅ Script added -->
+</head>
+<body>
+  <div class="container">
+    <h2>Create an Account</h2>
+
+    <!-- ✅ Flash Messages for User Feedback -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li class="flash-msg">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('register') }}" id="registerForm">
+      <label for="username">Username</label>
+      <input name="username" id="username" type="text" placeholder="Enter your username" required>
+      <p id="usernameFeedback" class="feedback-text"></p> <!-- ✅ Real-time validation feedback -->
+
+      <label for="email">Email</label>
+      <input name="email" id="email" type="email" placeholder="Enter your email" required>
+      <p id="emailFeedback" class="feedback-text"></p> <!-- ✅ Real-time validation feedback -->
+
+      <label for="password">Password</label>
+      <input name="password" id="password" type="password" placeholder="Enter a strong password (min. 6 characters)" minlength="6" required>
+      <p id="passwordFeedback" class="feedback-text"></p> <!-- ✅ Password strength hint -->
+
+      <div class="btn-group">
+        <button type="submit" class="small-btn login-btn" id="registerBtn" disabled>Register</button>
+        <a href="{{ url_for('login') }}" class="small-btn register-btn">Sign In</a>
+      </div>
+    </form>
+
+    <a href="{{ url_for('index') }}" class="small-btn secondary-btn">Back to Home</a>
+  </div>
+</body>
+</html>

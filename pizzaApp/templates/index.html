@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pizza Shop</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to<br>Pizza Shop</h1>
+
+    <!-- ✅ Show active user session -->
+    {% if session.get("username") %}
+      <p>Logged in as <strong>{{ session.get("username") }}</strong></p>
+    {% else %}
+      <p>Choose how you'd like to access the site</p>
+    {% endif %}
+
+    <!-- ✅ Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <div class="btn-group compact-btns">
+      <a href="{{ url_for('edit_menu_items') }}" class="small-btn login-btn">Edit Menu Items</a>
+      <a href="{{ url_for('customize_pizza') }}" class="small-btn register-btn">Create a Pizza</a>
+    </div>
+
+    <div class="btn-group compact-btns">
+      <a href="{{ url_for('login') }}" class="small-btn login-btn">Login as User</a>
+      <a href="{{ url_for('customize_pizza') }}" class="small-btn register-btn">Continue as Guest</a>
+    </div>
+
+    <a href="{{ url_for('admin_login') }}" class="btn login-btn" style="margin-top: 20px;">Login as Store Owner</a>
+
+    <p>Don't have an account?<br><a href="{{ url_for('register') }}" class="small-btn register-btn">Register here</a></p>
+
+    <!-- ✅ Add links to navigate to cart & past orders -->
+    {% if session.get("username") %}
+      <div class="btn-group">
+        <a href="{{ url_for('cart') }}" class="small-btn secondary-btn">View Your Cart</a>
+        <a href="{{ url_for('store_orders') }}" class="small-btn secondary-btn">View Past Orders</a>
+        <a href="{{ url_for('logout') }}" class="small-btn logout-btn">Logout</a>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>

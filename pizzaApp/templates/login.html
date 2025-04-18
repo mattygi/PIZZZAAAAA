@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="{{ url_for('static', filename='js/login.js') }}" defer></script> <!-- ✅ Added JS -->
+</head>
+<body>
+  <div class="container">
+    <h2>User Login</h2>
+
+    <!-- ✅ Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li class="flash-msg">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- ✅ Login Form with Instant Validation -->
+    <form method="post" action="{{ url_for('login') }}" id="loginForm">
+      <label for="username">Username</label>
+      <input name="username" id="username" type="text" placeholder="Enter your username" required>
+      <p id="usernameFeedback" class="feedback-text"></p> <!-- ✅ Dynamic feedback -->
+
+      <label for="password">Password</label>
+      <input name="password" id="password" type="password" placeholder="Enter your password" required>
+      <p id="passwordFeedback" class="feedback-text"></p> <!-- ✅ Dynamic feedback -->
+
+      <div class="btn-group">
+        <button type="submit" class="small-btn login-btn" id="loginBtn" disabled>Login</button>
+        <a href="{{ url_for('register') }}" class="small-btn register-btn">Register</a>
+      </div>
+    </form>
+
+    <a href="{{ url_for('index') }}" class="small-btn home-btn">Back to Home</a>
+  </div>
+</body>
+</html>

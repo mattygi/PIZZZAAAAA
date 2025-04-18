@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Store Orders</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>📦 Store Orders</h2>
+
+    <!-- ✅ Flash Messages for Admin Feedback -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li class="flash-msg">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- ✅ Display Orders -->
+    {% if orders %}
+      {% for order in orders %}
+        <div class="order-block">
+          <p><strong>Order ID:</strong> {{ order.id }}</p>
+          <p><strong>Customer:</strong> {{ order.customer }}</p>
+          <p><strong>Status:</strong> {{ order.status }}</p>
+          <p><strong>Total:</strong> ${{ order.total }}</p>
+
+          <h3>Items:</h3>
+          <ul>
+            {% for item in order.items %}
+              <li>{{ item.quantity }}x {{ item.pizza }} - ${{ item.price }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <hr>
+      {% endfor %}
+    {% else %}
+      <p>No orders found.</p>
+    {% endif %}
+
+    <div class="button-group">
+      <a href="{{ url_for('admin_menu') }}" class="small-btn secondary-btn">Return to Admin Panel</a>
+      <a href="{{ url_for('admin_logout') }}" class="small-btn logout-btn">Logout</a>
+    </div>
+  </div>
+</body>
+</html>

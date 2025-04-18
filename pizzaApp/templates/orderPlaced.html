@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Placed</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/orderPlaced.js') }}" defer></script> <!-- ✅ Added JS -->
+</head>
+<body>
+    <div class="container">
+        <h2>🎉 Thank You!</h2>
+        <p>Your order has been placed successfully.</p>
+
+        <h3>🧾 Order Receipt</h3>
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order-block">
+                    <p><strong>User:</strong> {{ order.user }}</p>
+                    <p><strong>Delivery Method:</strong> {{ order.delivery_method }}</p>
+                    <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+
+                    <ul>
+                        {% for item in order.items %}
+                            <li>{{ item.quantity }}x {{ item.pizza }} - ${{ item.price }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <p><strong>Total:</strong> ${{ order.total }}</p>
+                </div>
+                <hr>
+            {% endfor %}
+            <button onclick="printReceipt()" class="small-btn secondary-btn">🖨 Print Receipt</button>
+        {% else %}
+            <p>No order data available.</p>
+        {% endif %}
+
+        <div class="button-group">
+            <a href="{{ url_for('review_order') }}" class="small-btn login-btn">Review Order</a>
+            <a href="{{ url_for('index') }}" class="small-btn secondary-btn">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

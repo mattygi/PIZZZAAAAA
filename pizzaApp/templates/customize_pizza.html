@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Your Pizza</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/customize_pizza.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome, {{ username }}! Customize Your Pizza</h2>
+
+        <form method="post" action="{{ url_for('customize_pizza') }}">
+            <label class="section-label" for="pizza">Pizza Type</label>
+            <select name="pizza" id="pizza" required>
+                {% for item, details in menu.items() %}
+                    <option value="{{ item }}">{{ item }} - ${{ details.price }}</option>
+                {% endfor %}
+            </select>
+
+            <label class="section-label">Size</label>
+            <div class="radio-group">
+                <label><input type="radio" name="size" value="Small" required> <span>Small</span></label>
+                <label><input type="radio" name="size" value="Medium" checked> <span>Medium</span></label>
+                <label><input type="radio" name="size" value="Large"> <span>Large</span></label>
+            </div>
+
+            <label class="section-label">Crust Type</label>
+            <div class="radio-group">
+                <label><input type="radio" name="crust" value="thin" required> <span>Thin</span></label>
+                <label><input type="radio" name="crust" value="regular"> <span>Regular</span></label>
+                <label><input type="radio" name="crust" value="stuffed"> <span>Stuffed</span></label>
+            </div>
+
+            <label class="section-label">Meat Toppings</label>
+            <div class="checkbox-grid">
+                <label><input type="checkbox" name="meats[]" value="Pepperoni"> <span>Pepperoni</span></label>
+                <label><input type="checkbox" name="meats[]" value="Sausage"> <span>Sausage</span></label>
+                <label><input type="checkbox" name="meats[]" value="Bacon"> <span>Bacon</span></label>
+                <label><input type="checkbox" name="meats[]" value="Ham"> <span>Ham</span></label>
+                <label><input type="checkbox" name="meats[]" value="Chicken"> <span>Chicken</span></label>
+            </div>
+
+            <label class="section-label">Veggie Toppings</label>
+            <div class="checkbox-grid">
+                <label><input type="checkbox" name="veggies[]" value="Mushrooms"> <span>Mushrooms</span></label>
+                <label><input type="checkbox" name="veggies[]" value="Onions"> <span>Onions</span></label>
+                <label><input type="checkbox" name="veggies[]" value="Green Peppers"> <span>Green Peppers</span></label>
+                <label><input type="checkbox" name="veggies[]" value="Black Olives"> <span>Black Olives</span></label>
+                <label><input type="checkbox" name="veggies[]" value="Spinach"> <span>Spinach</span></label>
+                <label><input type="checkbox" name="veggies[]" value="Pineapple"> <span>Pineapple</span></label>
+                <label><input type="checkbox" name="veggies[]" value="Jalapenos"> <span>Jalapeños</span></label>
+                <label><input type="checkbox" name="veggies[]" value="Diced Tomatoes"> <span>Diced Tomatoes</span></label>
+            </div>
+
+            <label class="section-label" for="quantity">Quantity</label>
+            <input type="number" name="quantity" id="quantity" min="1" value="1">
+
+            <div class="btn-group compact-btns">
+                <button type="submit" class="small-btn login-btn">Add to Cart</button>
+                <a href="{{ url_for('cart') }}" class="small-btn register-btn">Go to Cart</a>
+                <a href="{{ url_for('index') }}" class="small-btn logout-btn">Logout</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

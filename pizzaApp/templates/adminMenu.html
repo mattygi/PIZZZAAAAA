@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Admin Dashboard</h2>
+
+    <!-- ✅ Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <h3>Store Orders</h3>
+    {% if orders %}
+      <ul>
+        {% for order in orders %}
+          <li>Order #{{ loop.index }}: {{ order.user }} ordered {{ order.item }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No orders placed yet.</p>
+    {% endif %}
+
+    <h3>Current Menu Items</h3>
+    {% if menu %}
+      <ul>
+        {% for item in menu %}
+          <li>{{ item.name }} - {{ item.price }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No menu items available.</p>
+    {% endif %}
+
+    <h3>Manage Menu</h3>
+    <form method="get" action="{{ url_for('store_orders') }}">
+      <button type="submit" class="btn login-btn">Review Store Orders</button>
+    </form>
+    
+    <form method="get" action="{{ url_for('edit_menu_items') }}">
+      <button type="submit" class="btn login-btn">Edit Menu Items</button>
+    </form>
+
+    <form method="get" action="{{ url_for('edit_prices') }}">
+      <button type="submit" class="btn login-btn">Edit Menu Prices</button>
+    </form>
+
+    <form method="get" action="{{ url_for('admin_logout') }}">
+      <button type="submit" class="btn logout-btn">Logout</button>
+    </form>
+  </div>
+</body>
+</html>

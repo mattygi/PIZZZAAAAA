@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Order Confirmation</h2>
+
+    <!-- ✅ Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li class="flash-msg">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <h3>Review Your Order</h3>
+    {% if cart %}
+      <ul class="order-summary">
+        {% for order in cart %}
+          {% if order.status == "Pending" %}
+            <li>
+              <strong>Order #{{ order.id }}</strong> - {{ order.method }} (Status: {{ order.status }})
+              <ul>
+                {% for item in order.items %}
+                  <li>{{ item.quantity }}x {{ item.size }} {{ item.pizza }} - ${{ item.price }}</li>
+                {% endfor %}
+              </ul>
+              <strong>Total:</strong> ${{ order.total }}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No active orders.</p>
+    {% endif %}
+
+    <!-- ✅ Choose Delivery Method -->
+    <form method="post" action="{{ url_for('proceed') }}">
+      <label>Choose Order Type</label><br>
+      <div class="radio-group">
+        <div class="radio-option">
+          <input type="radio" name="method" value="delivery" required>
+          <span>Delivery</span>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="method" value="pickup">
+          <span>In-Store Pickup</span>
+        </div>
+      </div>
+
+      <button type="submit" class="small-btn login-btn">Proceed to Payment</button>
+    </form>
+
+    <div class="button-group">
+      <a href="{{ url_for('cart') }}" class="small-btn secondary-btn">Back to Cart</a>
+      <a href="{{ url_for('store_orders') }}" class="small-btn secondary-btn">View Past Orders</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Prices</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="{{ url_for('static', filename='js/editprices.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Pizza Prices</h1>
+        <form id="price-form" method="post" action="{{ url_for('update_prices') }}">
+            <h2>Pizza Prices</h2>
+            {% for item, details in menu.items() %}
+            <div class="inline-input">
+                <label>{{ item }}: $</label>
+                <input type="number" name="{{ item }}" step="0.01" value="{{ details.price }}" required>
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="small-btn login-btn">Save Prices</button>
+        </form>
+
+        <a href="{{ url_for('index') }}" class="small-btn login-btn">Home</a>
+    </div>
+</body>
+</html>
