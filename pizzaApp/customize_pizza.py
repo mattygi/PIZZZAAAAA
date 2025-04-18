@@ -1,3 +1,4 @@
+
 import json
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -51,7 +52,7 @@ def save_orders(orders):
         print(f"✅ Saved orders to {ORDERS_FILE}: {orders}")
     except Exception as e:
         print(f"❌ An error occurred while saving orders to {ORDERS_FILE}: {e}")
-        flash("⚠️  An error occurred while saving your order. Please try again.", "error")
+        flash("⚠️ An error occurred while saving your order. Please try again.", "error")
 
 @app.route('/')
 def index():
@@ -67,6 +68,10 @@ def customize_pizza():
     """Handle pizza customization and store selections in JSON file."""
     global ORDERS_FILE
     print("🍕 customize_pizza route called")  # Debugging
+
+    # Debugging: Log raw form data
+    print("Form data received:", request.form)
+
     pizza_type = request.form.get("pizza")
     size = request.form.get("size")
     quantity = request.form.get("quantity", 1)
@@ -74,14 +79,12 @@ def customize_pizza():
     veggies = request.form.getlist("veggies[]")
 
     # Validate pizza type and size
-    if pizza_type not in MENU_ITEMS:
-        flash("⚠️ Pizza not found in menu!", "error")
+    if not pizza_type or pizza_type not in MENU_ITEMS:
+        flash("⚠️ Invalid pizza type selected!", "error")
         return redirect(url_for('index'))
     if not size:
         flash("⚠️ Please select a size for your pizza.", "error")
         return redirect(url_for('index'))
-
-    price_per_pizza = MENU_ITEMS[pizza_type]["price"]
 
     # Ensure quantity is an integer
     try:
@@ -93,10 +96,15 @@ def customize_pizza():
         flash("⚠️ Invalid quantity! Defaulting to 1.", "error")
         quantity = 1
 
+    # Calculate total price
+    price_per_pizza = MENU_ITEMS[pizza_type]["price"]
     total_price = price_per_pizza * quantity
-    user_id = session["user_id"]
+
+    # Get user information
+    user_id = session.get("user_id", "guest_user")
     username = session.get("username", "Guest")
 
+    # Construct order data
     order_data = {
         "order_id": len(load_orders()) + 1,
         "user_id": user_id,
@@ -113,43 +121,14 @@ def customize_pizza():
         ],
         "status": "Pending",
     }
+
+    # Debugging: Log constructed order data
+    print("Constructed order data:", order_data)
+
+    # Save order data
     orders = load_orders()  # Load the current orders
     orders.append(order_data)  # Append the new order
     save_orders(orders)  # Save the updated orders
 
     flash(f"✅ {quantity} {size} {pizza_type} Pizza(s) added to your cart!", "success")
     return redirect(url_for('cart'))
-
-@app.route('/cart', methods=['GET'])
-def cart():
-    """View the cart with items stored in JSON file for the logged-in user."""
-    orders = load_orders()
-    user_id = session.get("user_id")
-
-    user_orders = [order for order in orders if order.get("user_id") == user_id and order.get("status") == "Pending"]
-    return render_template('cart.html', cart=user_orders)
-
-@app.route('/checkout', methods=['POST'])
-def checkout():
-    """Process checkout for pending orders."""
-    orders = load_orders()
-    user_id = session.get("user_id")
-
-    user_orders = [order for order in orders if order.get("user_id") == user_id and order.get("status") == "Pending"]
-
-    if not user_orders:
-        flash("⚠️ Your cart is empty!", "warning")
-        return redirect(url_for('cart'))
-
-    for order in user_orders:
-        order["status"] = "Completed"
-    save_orders(orders)
-    flash("🎉 Your order has been placed successfully!", "success")
-    return redirect(url_for('index'))  # Redirect to order confirmation
-
-@app.route('/order_placed')
-def order_placed():
-    return render_template('order_placed.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
