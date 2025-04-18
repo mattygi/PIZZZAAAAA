@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,23 +9,25 @@
 <body>
     <div class="container">
         <h2>Your Cart</h2>
-        {% if cart and cart|length > 0 %}  <ul>
+        {% if cart and cart|length > 0 %}
+            <ul>
                 {% for order in cart %}
                     <li>
                         <strong>Order ID:</strong> {{ order.order_id }}<br>
                         <strong>User:</strong> {{ order.username }}<br>
                         <strong>Status:</strong> {{ order.status }}<br>
-                        {% if order.items and order.items|length > 0 %}  Items:
+                        {% if order.items and (order.items() if order.items is callable else order.items)|length > 0 %}
+                            Items:
                             <ul>
-                                {% for item in order.items %}
+                                {% for item in (order.items() if order.items is callable else order.items) %}
                                     <li>
                                         {{ item.Quantity }} x {{ item.Item }} ({{ item.Size }}) - Price: ${{ item.Price }}
                                     </li>
                                 {% endfor %}
                             </ul>
-                         {% else %}
+                        {% else %}
                             <p>No items in this order.</p>
-                         {% endif %}
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
