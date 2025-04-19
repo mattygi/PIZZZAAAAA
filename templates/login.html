@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log in
+{% endblock %}
+
+{% block main %}
+    <form action="/login" method="post">
+        <div class="px-2 mtop ml-1 p-2">
+            <input autocomplete="off" autofocus id="username" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="px-2 mt-0 ml-1 p-2">
+            <input id="password" name="password" placeholder="Password" type="password">
+        </div>
+
+
+        {% if apology_message %}
+        <div class="apology">
+            {{ apology_message }}
+        </div>
+        {% endif %}
+
+        <button class="custom-btn" type="submit" onclick="checkAndShowAlert()">Log In</button>
+
+    </form>
+{% endblock %}

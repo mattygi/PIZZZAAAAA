@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html lang="pt">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block head %}{% endblock %}
+        <title>CS50 Project: {% block title %}{% endblock %}</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Your custom CSS -->
+        <link rel="stylesheet" type="text/css" href="static/styles.css">
+
+        <!-- Google Fonts -->
+        <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Annie+Use+Your+Telescope' rel='stylesheet'>
+        <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet'>
+
+        <!-- Bootstrap JS and Dependencies -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    </head>
+    <body id="page-container">
+        <div id="page-container">
+            <div id="content">
+                <!-- Navbar -->
+                <nav class="navbar fixed-top" id="navbar">
+                    <a href="/" class="brand">
+                        <img src="static/mrpizzalogo.jpeg" alt="Company Brand">
+                    </a>
+                    {% if session["user_id"] %}
+                        <ul class="nav-links">
+                            <li class="welcome">Welcome, {{ session["username"] }}</li><br>
+                            <li><a href="/" class="nav-link">Home</a></li>
+                            <li><a href="/order_history" class="nav-link">Order History</a></li>
+                            <li><a href="/logout" class="nav-link" style="font-weight: bold;">Logout</a></li>
+
+                        </ul>
+
+                    {% else %}
+                        <ul class="nav-links">
+                            <li><a href="/login" class="nav-link">Login</a></li>
+                            <li><a href="/register" class="nav-link">Register</a></li>
+                        </ul>
+                    {% endif %}
+                </nav>
+
+                <main>
+                    {% block main %}{% endblock %}
+                </main>
+            </div>
+            <footer class="footer custom-footer">
+
+            This was CS50 2023! <br><br>
+            <h5>I'm Pedro Alves from Viseu, Portugal</h5>
+            <h5>My project is called Mr. Pizza Website.</h5>
+
+            </footer>
+        </div>
+    </body>
+</html>

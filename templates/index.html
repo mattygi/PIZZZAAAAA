@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Homepage
+{% endblock %}
+
+
+{% block main %}
+
+    <div class="custom_container">
+        <h1>Welcome to Mr. Pizza</h1>
+        <p class="container-black">Sempre Tradizionale</p>
+        <br>
+
+        <br><br>
+
+        <form action="/" method="GET">
+            <button class="custom-btn btn-typo size-big" formaction="/order" type="submit">Fazer pedido!</button>
+        </form>
+
+    </div>
+
+{% endblock %}

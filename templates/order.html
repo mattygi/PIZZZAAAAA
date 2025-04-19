@@ -1,0 +1,312 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Pedido
+{% endblock %}
+
+{% block head %}
+    <!-- Include your custom CSS file -->
+    <link rel="stylesheet" type="text/css" href="static/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        {% for data in pizza_data %}
+        <div class="col-md-4 mb-4">
+            <div class="card rounded" style="width: 20rem; height: 100%;">
+                <img src="{{ url_for('static', filename='pizza_images/pizza' ~ loop.index ~ '.jpg') }}" alt="{{ data.pizza_name }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ data.pizza_name }}
+                        <button class="btn btn-link text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                            <i class="bi bi-list" style="color: #AB0303;"></i>
+                        </button>
+                    </h5>
+                    <div class="collapse" id="collapse{{ loop.index }}">
+                        <p class="card-text" style="font-style: italic; margin-bottom: 15px;">{{ data.ingredients }}</p>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3"> <!-- Align items side by side -->
+                        <div class="me-2"> <!-- Add margin to create space between elements -->
+                            <label for="pizzaSize{{ loop.index }}" class="form-label">Select Size:</label>
+                            <select
+                                class="form-select pizza-size-dropdown"
+                                data-normal-price="{{ data.normal_price }}"
+                                data-maxi-price="{{ data.maxi_price }}"
+                                data-pizza-id="{{ data.id_pizza }}"
+                            >
+                                <option value="normal">Normal (35cm) | €{{ data.normal_price }}</option>
+                                <option value="maxi">Maxi (50cm) | €{{ data.maxi_price }}</option>
+                            </select>
+                        </div>
+                        <div class="ms-2"> <!-- Add margin to create space between elements -->
+                            <label for="pizzaQty{{ loop.index }}" class="form-label">Qty:</label>
+                            <input type="number" class="form-control" id="pizzaQty{{ loop.index }}" value="0" min="0" style="width: 60px;"> <!-- Adjust width as needed -->
+                        </div>
+                    </div>
+                    <p class="error-message" style="color: red; display: none;">Quantity cannot be 0</p>
+                    <div class="d-flex justify-content-center mt-2"> <!-- Center the button -->
+                        <button
+                            class="custom-btn btn-primary btn-sm custom-card-button add-button"
+                            data-pizza-name="{{ data.pizza_name }}"
+                            data-pizza-id="{{ data.id_pizza }}"
+                            data-normal-price="{{ data.normal_price }}"
+                            data-maxi-price="{{ data.maxi_price }}"
+                        >
+                            Add to Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <button id="openLateralOrderSummary" class="open-button pulse-animation">Summary</button>
+        <div id="lateralOrderSummary" class="lateral-order-summary">
+            <h3 style="margin-top: 50px;">Summary</h3>
+            <ul id="lateralOrderItemList"></ul>
+            <hr>
+            <p>Total: <span id="lateralOrderTotalAmount">€0.00</span></p>
+            <button id="closeLateralOrderSummary" class="close-button">X</button>
+            <button id="placeOrderButton" class="custom-btn btn-primary btn-sm">Place Order</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let temporaryOrders = []; // Declare the temporaryOrders array
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const addButtons = document.querySelectorAll('.add-button');
+        const sizeDropdowns = document.querySelectorAll('.pizza-size-dropdown');
+        const openTabButton = document.getElementById('openLateralOrderSummary'); // Replace with your button's ID
+        const closeTabButton = document.getElementById('closeLateralOrderSummary'); // The button inside the lateral tab
+        const placeOrderButton = document.getElementById('placeOrderButton');
+
+        addButtons.forEach(button => {
+            button.addEventListener('click', handleAddToOrderClick);
+        });
+
+        placeOrderButton.addEventListener('click', function () {
+            // Send an AJAX POST request to your Flask app to insert the order into the database
+            fetch('/insert_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    temporaryOrders: temporaryOrders  // Send the temporaryOrders array
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Redirect to the order summary page
+                window.location.href = '/order_summary'; // Replace with your order summary URL
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                console.log('Response:', error.response); // Log the response for further inspection
+            });
+        });
+
+        sizeDropdowns.forEach(select => {
+            select.addEventListener('change', function () {
+                const selectedSize = select.value;
+                const pizzaId = select.getAttribute('data-pizza-id');
+                const addButton = document.querySelector(`.add-button[data-pizza-id="${pizzaId}"]`);
+                addButton.setAttribute('data-pizza-size', selectedSize);
+            });
+        });
+
+
+        openTabButton.addEventListener('click', function () {
+            // Show the lateral order summary tab
+            document.getElementById('lateralOrderSummary').style.right = '0';
+            // Show the close button
+            closeTabButton.style.display = 'block';
+        });
+
+        closeTabButton.addEventListener('click', function () {
+            // Hide the lateral order summary tab
+            document.getElementById('lateralOrderSummary').style.right = '-300px';
+            // Hide the close button
+            closeTabButton.style.display = 'none';
+        });
+    });
+
+
+    document.addEventListener('change', function (event) {
+        if (event.target.classList.contains('pizza-size-dropdown')) {
+            const selectedSize = event.target.value;
+            const pizzaId = event.target.getAttribute('data-pizza-id');
+            const addButton = document.querySelector(`.add-button[data-pizza-id="${pizzaId}"]`);
+            const pizzaPriceAttribute = selectedSize === 'normal' ? 'data-normal-price' : 'data-maxi-price';
+            const pizzaPrice = event.target.getAttribute(pizzaPriceAttribute);
+            addButton.setAttribute('data-pizza-price', pizzaPrice);
+        }
+    });
+
+    function handleAddToOrderClick(event) {
+        const button = event.target;
+        const pizzaName = button.getAttribute('data-pizza-name');
+        let pizzaSize = button.getAttribute('data-pizza-size');
+        if (pizzaSize === null || pizzaSize === 'None') {
+            // Handle the case when pizzaSize is not set or is 'None'
+            pizzaSize = 'normal';
+        }
+
+        const pizzaId = button.getAttribute('data-pizza-id');
+
+         // Determine the appropriate price attribute based on the selected size
+        const pizzaPriceAttribute = pizzaSize === 'normal' ? 'data-normal-price' : 'data-maxi-price';
+        const pizzaPrice = button.getAttribute(pizzaPriceAttribute);
+
+        // Get the quantity input value based on the pizza ID
+        const quantityInput = document.getElementById(`pizzaQty${pizzaId}`);
+        const pizzaQuantity = parseInt(quantityInput.value);
+
+        // If the pizza quantity is 0, display an error message and return
+        if (pizzaQuantity === 0) {
+            showMessage('Invalid quantity', true, button);
+            return;
+        }
+
+        // Add the pulse-animation class to the Summary button
+        const summaryButton = document.getElementById('openLateralOrderSummary');
+        summaryButton.classList.add('pulse-animation');
+
+        // Remove the pulse-animation class after a brief delay
+        setTimeout(() => {
+            summaryButton.classList.remove('pulse-animation');
+        }, 1000); // Adjust the delay time as needed
+
+         // Check if the same order already exists in temporaryOrders
+        const existingOrderIndex = temporaryOrders.findIndex(order => order.pizzaName === pizzaName && order.pizzaSize === pizzaSize);
+
+        if (existingOrderIndex !== -1) {
+            // Update the quantity of the existing order
+            temporaryOrders[existingOrderIndex].pizzaQuantity += pizzaQuantity;
+        } else {
+            // Create a new order object and add it to temporaryOrders
+            const order = {
+                pizzaName: pizzaName,
+                pizzaId: pizzaId,
+                pizzaSize: pizzaSize,
+                pizzaQuantity: pizzaQuantity,
+                pizzaPrice: pizzaPrice
+            };
+            temporaryOrders.push(order);
+        }
+
+        // Update the order summary and display
+        updateOrderSummary();
+
+         // Store the temporaryOrders array in localStorage
+        localStorage.setItem('temporaryOrders', JSON.stringify(temporaryOrders));
+
+        // Determine the appropriate message based on the quantity
+        const message = pizzaQuantity === 0 ? 'Invalid' : 'Added';
+        const isError = pizzaQuantity === 0;
+
+        // Display the message
+        showMessage(message, isError, button);
+
+        // Create a new list item for the order summary
+        const orderItem = document.createElement('li');
+        orderItem.textContent = `${pizzaQuantity}x ${pizzaSize === 'normal' ? 'Normal' : 'Maxi'} ${pizzaName} - €${pizzaPrice}`;
+}
+
+
+function updateOrderSummary() {
+    const orderList = document.getElementById('lateralOrderItemList');
+    orderList.innerHTML = ''; // Clear previous orders
+
+    temporaryOrders.forEach((order, index) => {
+        const orderItem = document.createElement('li');
+        orderItem.textContent = `${order.pizzaQuantity}x ${order.pizzaSize === 'normal' ? 'Normal' : 'Maxi'} ${order.pizzaName} - €${order.pizzaPrice}`;
+
+        // Create delete link for each order item
+        const deleteLink = document.createElement('a');
+        deleteLink.textContent = 'Delete';
+        deleteLink.href = '#';
+        deleteLink.classList.add('order-action-link', 'delete-link'); // Apply custom CSS class
+        deleteLink.addEventListener('click', (event) => handleDeleteButtonClick(event, index));
+        orderItem.appendChild(deleteLink);
+
+        // Create edit link for each order item
+        const editLink = document.createElement('a');
+        editLink.textContent = 'Edit';
+        editLink.href = '#';
+        editLink.classList.add('order-action-link', 'edit-link'); // Apply custom CSS class
+        editLink.addEventListener('click', (event) => handleEditButtonClick(event, index));
+        orderItem.appendChild(editLink);
+
+        orderList.appendChild(orderItem);
+    });
+
+    // Calculate and display the total amount
+    const totalAmount = temporaryOrders.reduce((total, order) => total + (parseFloat(order.pizzaPrice) * order.pizzaQuantity), 0);
+    const totalAmountElement = document.getElementById('lateralOrderTotalAmount');
+    totalAmountElement.textContent = `€${totalAmount.toFixed(2)}`;
+}
+
+
+// Define a function to display a message
+function showMessage(message, isError, button) {
+    const messageElement = document.createElement('p');
+    messageElement.textContent = message;
+    messageElement.classList.add(isError ? 'error-message' : 'done-message', 'message-element');
+
+    // Find the card container for this pizza item
+    const cardContainer = button.closest('.card');
+
+    // Check if there's an existing message element in the card container
+    const existingMessage = cardContainer.querySelector('.message-element');
+    if (existingMessage) {
+        existingMessage.remove(); // Remove the existing message
+    }
+
+    // Append the message element to the card container
+    cardContainer.appendChild(messageElement);
+
+    // Center the message element vertically and horizontally
+    messageElement.style.position = 'absolute';
+    messageElement.style.top = '90%'; // Adjust the vertical positioning
+    messageElement.style.left = '85%';
+    messageElement.style.transform = 'translate(-50%, -50%)';
+
+    // Remove the message element after a brief delay
+    setTimeout(() => {
+        messageElement.remove();
+    }, 1500); // Adjust the delay time as needed
+}
+
+// Function to handle the delete button click
+function handleDeleteButtonClick(index) {
+    temporaryOrders.splice(index, 1); // Remove the item from temporaryOrders
+    updateOrderSummary(); // Update the order summary display
+}
+
+function handleEditButtonClick(event, index) {
+    const newQuantity = parseInt(prompt('Enter new quantity:'));
+
+    if (!isNaN(newQuantity) && newQuantity >= 0) {
+        // Check if the index is within the range of temporaryOrders
+        if (index >= 0 && index < temporaryOrders.length) {
+            // Update the quantity
+            temporaryOrders[index].pizzaQuantity = newQuantity;
+            updateOrderSummary(); // Update the order summary display
+        } else {
+            alert('Invalid order index.');
+        }
+    } else {
+        alert('Invalid quantity entered.');
+    }
+}
+
+
+</script>
+
+
+{% endblock %}

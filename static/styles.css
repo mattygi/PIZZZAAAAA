@@ -1,0 +1,371 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Set height to 100% to ensure proper positioning */
+}
+
+#page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#content {
+    flex: 1;
+}
+
+    /* Style for the navigation bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFF;
+    padding: 10px 20px;
+}
+
+    /* Style for the brand/logo */
+.brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* Style for the brand/logo image */
+.brand img {
+    width: 90px; /* Adjust the image size as needed */
+    height: auto;
+    margin-right: 10px; /* Add spacing between image and text */
+    margin-left: 20px;
+}
+
+/* Style for the navigation links */
+.nav-links {
+    font-family: 'Annie Use Your Telescope', sans-serif;
+    font-size: 24px;
+    list-style: none;
+    display: flex;
+    align-items: center; /* Center vertically */
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    margin-right: 20px;
+}
+
+/* Style for individual navigation link items */
+.nav-link {
+    color: #AB0303;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+/* Adjust the footer styles */
+.custom-footer {
+    font-family: "Georgia", serif;
+    font-size: 16px;
+    color: #FFFFFF;
+    text-align: center;
+    background-color: #AB0303;
+    padding: 20px 0;
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    margin-top: auto;
+    bottom: 0; /* Add this to ensure the footer stays at the bottom */
+}
+
+.small-text {
+    font-size: 12px; /* Adjust the font size as needed */
+}
+
+.header {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 13vh;
+    background-color: white;
+}
+
+.custom-btn {
+    cursor: pointer;
+    font-family: 'Annie Use Your Telescope', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #AB0303, #8E0000);
+    color: #FFFFFF;
+    border: none;
+    text-align: center;
+    transition: background 0.3s ease-in-out;
+}
+
+.size-big{
+    width: 250px;
+    height: 60px;
+    font-size: 24px;
+}
+
+.size-small{
+    margin-top: 20px;
+    width: 80px;
+    height: 20px;
+    font-size: 16px;
+}
+
+.custom-btn:hover {
+    background: linear-gradient(135deg, #8E0000, #AB0303);
+}
+
+.black{
+    color: #000;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .logo img {
+        max-width: 80%;
+    }
+}
+
+  .custom-btn:hover {
+    background-color: #cc0000; /* Change to your desired hover background color */
+  }
+
+.custom-red-bg {
+    background-color: #AB0303; /* Replace with your desired red color */
+}
+
+.custom-white-bg {
+    background-color: #FFFFFF; /* Replace with your desired white color */
+}
+
+.yellow-bg {
+    background-color: #F9C23C; /* Replace with your desired white color */
+}
+
+.custom_container {
+    text-align: center; /* Center the content horizontally */
+    margin-bottom: 40px;
+    font-family: 'Lobster';
+    margin-top: 100px;
+    color: #AB0303;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 4px;
+  }
+
+.container-black {
+    text-align: center; /* Center the content horizontally */
+    font-family: 'Lobster';
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 4px;
+
+}
+
+.navbar {
+    color: #AB0303;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+    font-family: 'Lobster';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 2px;
+}
+
+/* Add background image to the body */
+    body {
+        background-image: url('background.png');
+        background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+        background-repeat: no-repeat; /* Prevent image repetition */
+        background-attachment: fixed; /* Keep the image fixed while scrolling */
+        background-size: contain;
+        background-size: 100% auto;
+        background-position: center bottom; /* Position the image at the bottom center */
+    } */
+
+
+/* Custom CSS to center content */
+.centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Centers content vertically within viewport */
+}
+
+.centered .form-control {
+    text-align: center; /* Center text horizontally */
+}
+
+form {
+    text-align: center;
+
+}
+
+.custom-btn {
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    border: 0.2px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+    width: 200px;
+
+}
+
+
+/* Additional CSS to reduce input size */
+#username, #password {
+    width: 200px; /* Adjust the width to your preference */
+}
+
+.mtop {
+    margin-top: 100px;
+}
+
+.apology {
+    color: red;
+    font-size: 14px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-family: 'Arial';
+    font-style: italic;
+}
+
+.welcome {
+    font-size: 18px;
+    font-family: 'Annie Use Your Telescope', sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    margin-right: 10px; /* Add some margin from the right edge */
+}
+
+.custom-dropdown {
+    max-width: 200px; /* Adjust the value as needed */
+    margin: 0 auto;   /* Center the dropdown horizontally */
+}
+
+.lateral-order-summary {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Initially hidden to the right */
+    width: 300px; /* Adjust the width as needed */
+    height: 100%;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    z-index: 900;
+}
+
+.lateral-order-summary.show {
+    right: 0; /* Slide in from the right */
+}
+
+.close-button {
+    position: absolute;
+    top: 0;
+    left: -40px; /* Position the button to the left of the tab */
+    background-color: #AB0303;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 60px;
+    z-index: 1000; /* Ensure the button is above other content */
+    display: none;
+}
+
+.close-button:hover {
+    background-color: #8E0000;
+}
+
+.open-button {
+    position: fixed;
+    top: 100px;
+    right: 0px; /* Position the button to the right corner */
+    background-color: #AB0303;
+    width: 100px;
+    transform: rotate(270deg); /* Rotate the button vertically */
+    color: white;
+    border: none;
+    padding: 5px 10px; /* Adjust padding to make it smaller */
+    border-radius: 5px;
+    cursor: pointer;
+    text-orientation: mixed; /* Allow mixed orientation for the text */
+    z-index: 800; /* Ensure the button is above other content */
+}
+
+
+.open-button:hover {
+    background-color: #8E0000;
+}
+
+/* Style for the error message */
+.error-message {
+    font-family: 'Annie Use Your Telescope', sans-serif;
+    color: red;
+    display: block;
+    z-index: 1000;
+    font-size: 18px;
+}
+
+/* Style for the "Done" message */
+.done-message {
+    font-size: 18px;
+    weight: bold;
+    font-family: 'Annie Use Your Telescope', sans-serif;
+    color: green;
+    display: block;
+    z-index: 1000;
+}
+
+/* Style for order action links */
+.order-action-link {
+    margin-left: 10px; /* Add spacing between links */
+    color: #007bff; /* Default link color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s; /* Add a smooth color transition */
+}
+
+/* Style for delete link */
+.delete-link {
+    color: #ff0000; /* Red color for delete link */
+}
+
+/* Style for edit link */
+.edit-link {
+    color: #00cc00; /* Green color for edit link */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1) rotate(270deg);
+    }
+    50% {
+        transform: scale(1.5) rotate(270deg); /* Adjust the rotation angle as needed */
+    }
+    100% {
+        transform: scale(1) rotate(270deg);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 1s ease infinite;
+}

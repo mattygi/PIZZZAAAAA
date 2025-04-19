@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Order Summary
+{% endblock %}
+
+
+{% block main %}
+
+<head>
+    <style>
+        body {
+            font-family: 'Annie Use Your Telescope', sans-serif;
+            text-align: center;
+            margin: 50px;
+            padding: 20px;
+            height: 100%;
+
+        }
+
+        h1 {
+            margin-top: 40px;
+            font-size: 80px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            font-size: 32px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 32px;
+        }
+
+        .receipt-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 600px;
+    }
+
+    </style>
+</head>
+
+<body>
+    <div class="receipt-card">
+        <h1>Order Summary</h1>
+        <ul id="orderSummaryList"></ul>
+        <p style="font-weight: bold;">Total: <span id="orderTotalAmount"></span></p>
+        <p style="color: #AB0303;">Thank you for your order!</p>
+    </div>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const orderSummaryList = document.getElementById('orderSummaryList');
+        const orderTotalAmount = document.getElementById('orderTotalAmount');
+
+        // Get the temporaryOrders array from localStorage
+        const temporaryOrders = JSON.parse(localStorage.getItem('temporaryOrders'));
+
+        if (temporaryOrders) {
+            temporaryOrders.forEach(order => {
+                const orderItem = document.createElement('li');
+                orderItem.textContent = `${order.pizzaQuantity}x ${order.pizzaSize === 'normal' ? 'Normal' : 'Maxi'} ${order.pizzaName} - €${order.pizzaPrice}`;
+                orderSummaryList.appendChild(orderItem);
+            });
+
+            const totalAmount = temporaryOrders.reduce((total, order) => total + (parseFloat(order.pizzaPrice) * order.pizzaQuantity), 0);
+            orderTotalAmount.textContent = `€${totalAmount.toFixed(2)}`;
+
+            // Clear the temporaryOrders array in localStorage after displaying the summary
+            localStorage.removeItem('temporaryOrders');
+        }
+
+        // Detect page reload and redirect to homepage
+        const isReloaded = performance.navigation.type === 1;
+        if (isReloaded) {
+            window.location.href = '/'; // Replace with your homepage URL
+        }
+    });
+
+    // Inside the <script> tag in your order_summary.html page
+    document.addEventListener('DOMContentLoaded', function () {
+        const orderSummaryList = document.getElementById('orderSummaryList');
+        const orderTotalAmount = document.getElementById('orderTotalAmount');
+
+        // Get the temporaryOrders array from localStorage
+        const temporaryOrders = JSON.parse(localStorage.getItem('temporaryOrders'));
+
+        if (temporaryOrders) {
+            temporaryOrders.forEach(order => {
+                const orderItem = document.createElement('li');
+                orderItem.textContent = `${order.pizzaQuantity}x ${order.pizzaSize === 'normal' ? 'Normal' : 'Maxi'} ${order.pizzaName} - €${order.pizzaPrice}`;
+                orderSummaryList.appendChild(orderItem);
+            });
+
+            const totalAmount = temporaryOrders.reduce((total, order) => total + (parseFloat(order.pizzaPrice) * order.pizzaQuantity), 0);
+            orderTotalAmount.textContent = `€${totalAmount.toFixed(2)}`;
+
+            // Save order to order history
+            const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+            orderHistory.push({
+                date: new Date().toLocaleString(),
+                orders: temporaryOrders
+            });
+            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+
+            // Clear the temporaryOrders array in localStorage after displaying the summary
+            localStorage.removeItem('temporaryOrders');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Order History
+{% endblock %}
+
+{% block main %}
+
+<head>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin-top: 100px;
+            font-family: 'Arial';
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Order History</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-start">Items</th>
+                        <th class="text-end">Total</th>
+                        <th class="text-end" style="width: 200px;">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in order_history %}
+                    <tr>
+                        <td class="text-start">{{ order["items"] }}</td>
+                        <td class="text-end">{{ order["total_amount"] | eur }}</td>
+                        <td class="text-end">{{ order["order_date"] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+{% endblock %}
